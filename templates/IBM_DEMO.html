@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Summarization</title>
+    <style>
+        body {
+            background-color: #004b49;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            align-items: left;
+            justify-content: left;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            color: white; 
+			font-family:  sans-serif;
+        }
+        h2 {
+            color: white; 
+			font-family:  sans-serif;
+        }
+        h3 {
+            color: white; 
+			font-family: sans-serif;
+        }
+        h4 {
+            color: white; 
+			font-family:  sans-serif;
+			align-items: center;
+            justify-content: center;
+        }
+
+        form {
+            margin-top: 40px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        input[type="file"], textarea {
+            margin-bottom: 10px; 
+        }
+
+                
+        #logo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 150px; 
+            height: 80px;
+        }
+    </style>
+</head>
+<body>
+	<img id="logo" src="https://cfo.co.za/wp-content/uploads/2021/05/iOCO_Logo_Mid-Morning-1024x470.jpg" alt="Logo">
+    <h1>Upload a Document</h1>
+    <form action="/summarize" method="post" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <input type="submit" value="Upload">
+    </form>
+    
+    
+    <h2>Summary</h2>
+    <p>{{ summary }}</p>
+    
+    <h3>Key Features</h3>
+    <ul>
+    {% for entity in entities %}
+        <li>{{ entity.text }}</li>
+    {% endfor %}
+    </ul>
+    
+	<h2>Chat with IBM Watson</h2>
+    <div id="chat-container">
+<div id="chat-box"></div>
+<input type="text" id="user-input" placeholder="Type a message...">
+<button onclick="sendMessage()">Send</button>
+</div>
+<script>
+        function sendMessage() {
+            var userInput = document.getElementById("user-input");
+            var message = userInput.value;
+            userInput.value = "";
+ 
+            updateChatBox("You: " + message);
+ 
+            fetch('/message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: message }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                var botReply = data.output.generic[0].text;
+                updateChatBox("Watson: " + botReply);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+ 
+        function updateChatBox(message) {
+            var chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML += "<div>" + message + "</div>";
+        }
+</script>
+<!-- #chat-container {
+        width: 300px;
+        height: 400px;
+        border: 1px solid #ccc;
+        margin: auto;
+        padding: 10px;
+    }
+ 
+    #chat-box {
+        height: 350px;
+        overflow-y: auto;
+    }
+ 
+    #user-input {
+        width: calc(100% - 60px);
+    } -->
+    
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat with IBM Watson</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+</body>
+</html>
